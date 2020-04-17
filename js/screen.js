@@ -123,19 +123,14 @@ class Screen extends React.Component {
     x = this.scaleCoord(x);
     y = this.scaleCoord(y);
 
-    HTTP.get(
-      'status', (status_result) => {
-        var session_id = status_result.sessionId;
-        HTTP.post(
-          'session/' + session_id + '/wda/tap/0',
-          JSON.stringify({
-            'x': x,
-            'y': y,
-          }),
-          (tap_result) => {
-            this.props.refreshApp();
-          },
-        );
+    HTTP.post(
+      '1.0/gesture/',
+      JSON.stringify({
+          'gesture' : 'touch',
+          'specifiers' : { 'coordinate' : [x, y]},
+      }),
+      (tap_result) => {
+        this.props.refreshApp();
       },
     );
   }
@@ -175,7 +170,7 @@ class Screen extends React.Component {
 
   home(ev) {
     HTTP.post(
-      '/wda/homescreen',
+      '1.0/home',
       JSON.stringify({}),
       (result) => {
         this.props.refreshApp();

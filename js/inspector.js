@@ -46,19 +46,26 @@ class Inspector extends React.Component {
         tap
       </Button>;
 
+    var frame = `{{${attributes.rect.x},${attributes.rect.y}},{${attributes.rect.width}, ${attributes.rect.height}}}`;
+    var hit_point = `{{${attributes.hit_point.x},${attributes.hit_point.y}}}`;
     return (
       <div>
-        {this.renderField('Class', attributes.type)}
-        {this.renderField('Raw identifier', attributes.rawIdentifier)}
-        {this.renderField('Name', attributes.name)}
-        {this.renderField('Value', attributes.value)}
-        {this.renderField('Label', attributes.label)}
-        {this.renderField('Rect', attributes.rect)}
-        {this.renderField('isEnabled', boolToString(attributes.isEnabled))}
-        {this.renderField('isVisible', boolToString(attributes.isVisible))}
-        {this.renderField('isFocused', typeof attributes.isFocused === 'undefined' ? null : boolToString(attributes.isFocused))}
+        {this.renderField('class/type', attributes.type)}
+        {this.renderField('ID', attributes.id)}
+        {this.renderField('name', attributes.name)}
+        {this.renderField('value', attributes.value)}
+        {this.renderField('label', attributes.label)}
+        {this.renderField('title', attributes.title)}
+        {this.renderField('rect', frame)}
+        {this.renderField('enabled', attributes.enabled)}
+        {this.renderField('hitable', attributes.hitable)}
+        {this.renderField('hit_point', hit_point)}
+        {this.renderField('focused', typeof attributes.isFocused === 'undefined' ? null : boolToString(attributes.has_focus))}
+        {this.renderField('has_keyboard_focus', boolToString(attributes.has_keyboard_focus))}
+        {this.renderField('selected', attributes.selected)}
+        {this.renderField('placeholder', attributes.placeholder)}
         {this.renderField('Tap', tapButton, false)}
-     </div>
+      </div>
     );
   }
 

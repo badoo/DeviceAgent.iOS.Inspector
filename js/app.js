@@ -20,9 +20,9 @@ import Inspector from 'js/inspector';
 
 require('css/app.css');
 
-const SCREENSHOT_ENDPOINT = 'screenshot';
-const TREE_ENDPOINT = 'source?format=json';
-const ORIENTATION_ENDPOINT = 'orientation';
+const SCREENSHOT_ENDPOINT = '1.0/screenshot';
+const TREE_ENDPOINT = '1.0/tree';
+const ORIENTATION_ENDPOINT = '1.0/orientations';
 
 class App extends React.Component {
   constructor(props) {
@@ -55,7 +55,7 @@ class App extends React.Component {
 
   fetchTree() {
     HTTP.get(TREE_ENDPOINT, (treeInfo) => {
-      treeInfo = treeInfo.value;
+      // treeInfo = treeInfo.value;
       this.setState({
         rootNode: TreeNode.buildNode(treeInfo, new TreeContext()),
       });
