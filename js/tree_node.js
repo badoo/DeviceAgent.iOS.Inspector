@@ -52,15 +52,19 @@ class TreeNode {
     this.children = children;
     this.rect = TreeNode.buildRect(node.rect);
     this.attributes = {
-      type: node.type,
-      rawIdentifier: node.rawIdentifier,
-      name: node.name,
-      value: node.value,
+      enabled: node.enabled,
+      has_focuse: node.has_focus,
+      has_keyboard_focus: node.has_keyboard_focus,
+      hitable: node.hitable,
+      hit_point: node.hit_point,
+      id: node.id,
       label: node.label,
-      rect: node.frame,
-      isEnabled: node.isEnabled,
-      isVisible: node.isVisible,
-      isFocused: node.isFocused,
+      placeholder: node.placeholder,
+      rect: node.rect,
+      selected: node.selected,
+      title: node.title,
+      type: node.type,
+      value: node.value,
     };
   }
 }
