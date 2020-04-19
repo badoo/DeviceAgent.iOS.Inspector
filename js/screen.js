@@ -85,28 +85,22 @@ class Screen extends React.Component {
     var fromY = params.origin.y - document.getElementById('screenshot').offsetTop;
     var toX = params.end.x - document.getElementById('screenshot').offsetLeft;
     var toY = params.end.y - document.getElementById('screenshot').offsetTop;
+    var duration = params.duration;
 
     fromX = this.scaleCoord(fromX);
     fromY = this.scaleCoord(fromY);
     toX = this.scaleCoord(toX);
     toY = this.scaleCoord(toY);
 
-    HTTP.get(
-      'status', (status_result) => {
-        var session_id = status_result.sessionId;
-        HTTP.post(
-          'session/' + session_id + '/wda/element/0/dragfromtoforduration',
-          JSON.stringify({
-            'fromX': fromX,
-            'fromY': fromY,
-            'toX': toX,
-            'toY': toY,
-            'duration': params.duration,
-          }),
-          (tap_result) => {
-            this.props.refreshApp();
-          },
-        );
+    HTTP.post(
+      '1.0/gesture/',
+      JSON.stringify({
+        'gesture' : 'drag',
+        'specifiers' : { 'coordinates' : [[fromX, fromY], [toX, toY]] },
+        'options' : { 'duration' : duration, 'num_fingers' : 1 },
+      }),
+      (tap_result) => {
+        this.props.refreshApp();
       },
     );
   }
