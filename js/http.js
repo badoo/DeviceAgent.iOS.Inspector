@@ -12,7 +12,7 @@ import Ajax from 'simple-ajax';
 class Http {
   static get(path, callback) {
     const ajax = new Ajax({
-      url: `http://localhost:41799/${path}`,
+      url: `http://localhost:27753/${path}`,
       method: 'GET',
     });
     ajax.on('success', event => {
@@ -24,7 +24,7 @@ class Http {
 
   static post(path, data, callback) {
     const ajax = new Ajax({
-      url: `http://localhost:41799/${path}`,
+      url: `http://localhost:27753/${path}`,
       method: 'POST',
       data: data,
     });
