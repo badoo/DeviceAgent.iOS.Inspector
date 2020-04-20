@@ -11,8 +11,9 @@ import Ajax from 'simple-ajax';
 
 class Http {
   static get(path, callback) {
+    var url = window._da_address || 'http://localhost:27753'
     const ajax = new Ajax({
-      url: `http://localhost:27753/${path}`,
+      url: `${url}/${path}`,
       method: 'GET',
     });
     ajax.on('success', event => {
@@ -23,8 +24,9 @@ class Http {
   }
 
   static post(path, data, callback) {
+    var url = window._da_address || 'http://localhost:27753'
     const ajax = new Ajax({
-      url: `http://localhost:27753/${path}`,
+      url: `${url}/${path}`,
       method: 'POST',
       data: data,
     });
