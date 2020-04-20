@@ -32,6 +32,12 @@ class Screen extends React.Component {
         <div className="section-caption">
           Screen
         </div>
+        <div className="port selection">
+          <input type="text" id="device-agent-endpoint" defaultValue="http://localhost:41799"></input>
+          <Button onClick={(ev) => {this.setDeviceAgentPort();}} >
+            Set DA endpoint
+          </Button>
+        </div>
         <div>
           <Button onClick={(ev) => {this.home(ev); }} >
             Home
@@ -66,6 +72,11 @@ class Screen extends React.Component {
       });
     }
     return this._gestureRecognizer;
+  }
+
+  setDeviceAgentPort() {
+    window._da_address = document.getElementById("device-agent-endpoint").value;
+    this.props.refreshApp();
   }
 
   styleWithScreenSize() {
