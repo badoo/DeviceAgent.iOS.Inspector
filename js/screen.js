@@ -32,8 +32,8 @@ class Screen extends React.Component {
         <div className="section-caption">
           Screen
         </div>
-        <div className="port selection">
-          <input type="text" id="device-agent-endpoint" defaultValue="http://localhost:41799"></input>
+        <div>
+          <input type="text" id="device-agent-endpoint" defaultValue="http://localhost:27753"></input>
           <Button onClick={(ev) => {this.setDeviceAgentPort();}} >
             Set DA endpoint
           </Button>
