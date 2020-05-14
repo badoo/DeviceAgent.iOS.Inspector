@@ -28,6 +28,15 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+
+    const urlParams = new URLSearchParams(window.location.search);
+    this.screenshot = urlParams.get('screenshot');
+    this.tree = urlParams.get('tree');
+
+    if (this.screenshot && this.tree) {
+      const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'))
+      window._da_address = window.location.origin + path;
+    }
   }
 
   refreshApp() {
@@ -39,11 +48,73 @@ class App extends React.Component {
     this.refreshApp();
   }
 
-  fetchScreenshot() {
+  fetchOrientation(callback) {
     HTTP.get(ORIENTATION_ENDPOINT, (orientation) => {
-      orientation = orientation.value;
-      HTTP.get(SCREENSHOT_ENDPOINT, (base64EncodedImage) => {
-        base64EncodedImage = base64EncodedImage.value;
+      callback(orientation.value);
+    })
+  }
+
+  fetchStaticOrientation(callback) {
+    callback(
+      {
+        "UIApplication_activeInterfaceOrientation":[1,"portrait"],
+        "UIDevice":[0,"unknown"],
+        "XCUIDevice":[0,"unknown"],
+        "SpringBoard_XCUIApplication":[1,"portrait"],
+        "AUT":[1,"portrait"],
+      }
+    )
+  }
+
+  fetchDaScreenshot(callback) {
+    HTTP.get(SCREENSHOT_ENDPOINT, (base64EncodedImage) => {
+      callback(base64EncodedImage.value);
+    });
+  }
+
+  toDataUrl(src, callback, outputFormat) {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      let dataURL;
+      canvas.height = this.naturalHeight;
+      canvas.width = this.naturalWidth;
+      ctx.drawImage(this, 0, 0);
+      dataURL = canvas.toDataURL(outputFormat);
+
+      callback(dataURL.slice('data:image/png;base64,'.length));
+    };
+    img.src = src;
+  }
+
+  fetchStaticScreenshot(url, callback) {
+    this.toDataUrl(
+      url,
+      callback,
+    )
+  }
+
+  defineScreenshot(callback) {
+    if (this.screenshot == null) {
+      return this.fetchDaScreenshot(callback)
+    } else {
+      return this.fetchStaticScreenshot(this.screenshot, callback)
+    }
+  }
+
+  defineOrientation(callback) {
+    if (this.screenshot == null) {
+      return this.fetchOrientation(callback)
+    } else {
+      return this.fetchStaticOrientation(callback)
+    }
+  }
+
+  fetchScreenshot() {
+    this.defineOrientation((orientation) => {
+      this.defineScreenshot((base64EncodedImage) => {
         ScreenshotFactory.createScreenshot(orientation, base64EncodedImage, (screenshot) => {
           this.setState({
             screenshot: screenshot,
@@ -53,14 +124,34 @@ class App extends React.Component {
     });
   }
 
-  fetchTree() {
+  defineTree(callback) {
+    if (this.tree == null) {
+      return this.fetchDaTree(callback)
+    } else {
+      return this.fetchStaticTree(this.tree, callback)
+    }
+  }
+
+  fetchStaticTree(url, callback) {
+    HTTP.get(url, (treeInfo) => {
+      callback(treeInfo);
+    });
+  }
+
+  fetchDaTree(callback) {
     HTTP.get(TREE_ENDPOINT, (treeInfo) => {
-      // treeInfo = treeInfo.value;
+      callback(treeInfo);
+    });
+  }
+
+  fetchTree() {
+    this.defineTree((treeInfo) => {
       this.setState({
         rootNode: TreeNode.buildNode(treeInfo, new TreeContext()),
       });
-    });
-  }
+    }
+  );
+}
 
   render() {
     return (
